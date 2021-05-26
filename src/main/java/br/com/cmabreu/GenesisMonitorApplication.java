@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextListener;
 
 @SpringBootApplication
-public class CryptoBoardApplication {
+public class GenesisMonitorApplication {
 
     @Bean
     public RequestContextListener requestContextListener() {
@@ -14,7 +14,7 @@ public class CryptoBoardApplication {
     }	
     
 	public static void main(String[] args) {
-		SpringApplication.run(CryptoBoardApplication.class, args);
+		SpringApplication.run(GenesisMonitorApplication.class, args);
 	}
 	
 }

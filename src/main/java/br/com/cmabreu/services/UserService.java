@@ -1,6 +1,7 @@
 package br.com.cmabreu.services;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.web3j.contracts.eip20.generated.ERC20;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.Transaction;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
@@ -28,9 +29,11 @@ import org.web3j.tx.gas.DefaultGasProvider;
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger( UserService.class );
 	private Web3j web3;
+	private List<TokenInfo> tokens;
+	//private Web3j web3Sk;
 	
 	@Value("${bscscan.key}")
-	private String bscScanApiKey;
+	private String bscScanApiKey; //PRGH4EEVRARQM68YX3IA4ZVBAYTADKHHQJ
 	
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;   	
@@ -42,10 +45,25 @@ public class UserService {
 		simpMessagingTemplate.convertAndSend( "/tokens", payload );
 	}
 	
+	public List<TokenInfo> getTokens(){
+		return this.tokens;
+	}
+	
 	@PostConstruct
 	public void init() {
 		try {
-			web3 = Web3j.build( new HttpService( "https://bsc-dataseed.binance.org/" ) ); 
+			String endpoint = "https://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/";
+			this.tokens = new ArrayList<TokenInfo>();
+			/*
+			WebSocketService web3jService = new WebSocketService("wss://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/", true);
+			web3jService.connect();
+			web3Sk = Web3j.build(web3jService);			
+			web3Sk.blockFlowable(false).subscribe(block -> {
+			    System.out.println("NEW BLOCK -> " + block.getBlock().getNumber().intValue());
+			});			
+			*/
+			
+			web3 = Web3j.build( new HttpService( endpoint ) ); 
 			Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
 			String clientVersion = web3ClientVersion.getWeb3ClientVersion();
 			logger.info( clientVersion );
@@ -62,13 +80,27 @@ public class UserService {
 		return restService.doRequestGet( url );		
 	}
 	
+	/*
+	public void testEthGetBlockByNumber() throws Exception {
+	    EthBlock ethBlock = web3.ethGetBlockByNumber( DefaultBlockParameter.valueOf(BigInteger.valueOf(2391)), true).send();
+	    EthBlock.Block block = ethBlock.getBlock();
+
+	    for ( TransactionResult tx : block.getTransactions() ) {
+	        System.out.println( " >>>>> " +   ((TransactionObject) tx).getCreates());
+	        EthTransaction ethTransaction = web3.ethGetTransactionByHash(((TransactionObject) tx).getHash()).send();
+	        System.out.println(ethTransaction.getTransaction().get().getCreates());
+	    }
+	    System.out.println(new ObjectMapper().writeValueAsString(block));
+	}
+	*/	
+	
+	
 	@Scheduled(fixedDelay = 5500 )
 	private void checkBlock() {
 		String lastBlock = getLastBlock();
 		JSONObject lb = new JSONObject( lastBlock );
 		String lbNumber = lb.getString("result");
 		String lbTX = getLastBlockTransactions( lbNumber );
-		
 		JSONObject lbTXObj = new JSONObject( lbTX );
 		JSONArray transactions = lbTXObj.getJSONObject("result").getJSONArray("transactions");
 		for( int x=0; x < transactions.length(); x++ ) {
@@ -81,19 +113,35 @@ public class UserService {
 			} catch ( Exception e ) {
 				//
 			}
+			
 			if( to.equals("") ) {
 				String txHash = tx.getString("hash");
+				logger.info("Candidate TX: " + txHash);
+				try {
+					TransactionReceipt receipt = getTransactionReceipt( txHash );
+					//System.out.println( new ObjectMapper().writeValueAsString( receipt ) );
+					String tokenContract = receipt.getLogs().get(0).getAddress();
+					logger.info("Token contract " + tokenContract );
+					//System.out.println( tokenContract );
+					getTokenData( tokenContract );
+				} catch ( Exception e ) { 
+					logger.info("Seems it not a token. Sorry.");
+				}
 				
+				
+				/*
 				try {
 					Transaction txResp = getTransactionByHash( txHash );
 					if( txResp != null ) {
+						System.out.println( txResp.getHash() + " " + txResp.getFrom() + " " + txResp.getTo() + " " + txResp.getValue() );
 						
-						System.out.println( txResp.getFrom() );
 						
-						if( txResp.getCreates() != null ) {
-							String tokenContract = txResp.getCreates();
-							logger.info("New token in contract " + tokenContract );
-							getTokenData( tokenContract );
+						String creates = txResp.getCreates();
+						if( creates != null ) {
+							logger.info("New token in contract " + creates );
+							getTokenData( creates );
+						} else {
+							logger.error("No created info: " + creates );
 						}
 					} else {
 						logger.error("Contract not found in TX " + txHash );
@@ -102,7 +150,7 @@ public class UserService {
 				} catch ( Exception e ) {
 					logger.error( e.getMessage() );
 				}
-				
+				*/
 				
 			}
 		}
@@ -114,28 +162,37 @@ public class UserService {
 	}
 	
 	public void getTokenData( String address ) throws Exception {
+		// https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51&apikey=YourApiKeyToken
 		String pk = "0x5bbbef76458bf30511c9ee6ed56783644eb339258d02656755c68098c4809130";
 		Credentials credentials = Credentials.create(pk);
 		ERC20 javaToken = ERC20.load(address, web3, credentials, new DefaultGasProvider());				
-				
 		String symbol = javaToken.symbol().send();
 		String name = javaToken.name().send();
 		//BigInteger decimal = javaToken.decimals().send();
-
 		TokenInfo tf = new TokenInfo( address, name, symbol );
-		
 		sendToUser(tf);
-		
 		logger.info("  > [ " + symbol + " ]   " + name );
+		this.tokens.add( tf );
 	}
-	
+
+	/*
 	public Transaction getTransactionByHash( String transactionHash ) throws Exception {
-		Optional<Transaction> otx =  web3.ethGetTransactionByHash(transactionHash).send().getTransaction();
-		if( otx.isPresent() ) {
-			return otx.get();
+		return web3.ethGetTransactionByHash(transactionHash).send().getResult();
+		//Optional<Transaction> otx =  web3.ethGetTransactionByHash(transactionHash).send().getTransaction();
+		//if( otx.isPresent() ) {
+		//	return otx.get();
+		//}
+		//return null;
+	}
+	*/
+	
+	public TransactionReceipt getTransactionReceipt( String txHash ) throws Exception {
+		Optional<TransactionReceipt> transactionReceipt = 
+			    web3.ethGetTransactionReceipt(txHash).send().getTransactionReceipt();
+		if( transactionReceipt.isPresent() ) {
+			return transactionReceipt.get();
 		}
 		return null;
 	}
-	
 	
 }
