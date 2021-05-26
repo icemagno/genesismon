@@ -31,7 +31,7 @@ public class UserService {
 	private Logger logger = LoggerFactory.getLogger( UserService.class );
 	private Web3j web3;
 	private List<TokenInfo> tokens;
-	private Web3j web3Sk;
+	//private Web3j web3Sk;
 	
 	@Value("${bscscan.key}")
 	private String bscScanApiKey; //PRGH4EEVRARQM68YX3IA4ZVBAYTADKHHQJ
@@ -55,14 +55,14 @@ public class UserService {
 		try {
 			String endpoint = "https://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/";
 			this.tokens = new ArrayList<TokenInfo>();
-			
+			/*
 			WebSocketService web3jService = new WebSocketService("wss://bsc-ws-node.nariox.org:443	", true);
 			web3jService.connect();
 			web3Sk = Web3j.build(web3jService);			
 			web3Sk.blockFlowable(false).subscribe(block -> {
 			    System.out.println("NEW BLOCK -> " + block.getBlock().getNumber().intValue());
 			});			
-			
+			*/
 			
 			web3 = Web3j.build( new HttpService( endpoint ) ); 
 			Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();

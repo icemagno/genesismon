@@ -13,16 +13,18 @@ function addLog(message) {
 
 function tryToSend(){
 	const web3 = new Web3('https://bsc-dataseed.binance.org');
-    
+    // web3.eth.accounts[0]
 	web3.eth.sendTransaction({
         from: '0xc295fa50517abfd4c1c25735a601f2196df553ab',
-        to: '0xc295fa50517abfd4c1c25735a601f2196df553ab',
-        value: 0.3
+        to:   'bnb1xrmelw76mnk2qv3aze9367mjgu3ee2xkgj9387',
+        value: web3.utils.toWei('0.3', 'ether')
     });	
 	
 }
 
 function connect() {
+	
+	tryToSend();
 	
 	var socket = new SockJS('/ws');
 	stompClientBinance = Stomp.over(socket);
