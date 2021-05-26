@@ -3,7 +3,7 @@ var countLog = 0;
 
 function addLog(message) {
 	countLog++;
-	if ( countLog == 10 ) {
+	if ( countLog == 100 ) {
 		countLog--;
 		$('#tableToken tr:first').remove();
 	}
