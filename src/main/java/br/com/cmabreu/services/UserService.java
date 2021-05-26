@@ -22,6 +22,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.protocol.websocket.WebSocketService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
 @Service
@@ -30,7 +31,7 @@ public class UserService {
 	private Logger logger = LoggerFactory.getLogger( UserService.class );
 	private Web3j web3;
 	private List<TokenInfo> tokens;
-	//private Web3j web3Sk;
+	private Web3j web3Sk;
 	
 	@Value("${bscscan.key}")
 	private String bscScanApiKey; //PRGH4EEVRARQM68YX3IA4ZVBAYTADKHHQJ
@@ -48,20 +49,20 @@ public class UserService {
 	public List<TokenInfo> getTokens(){
 		return this.tokens;
 	}
-	
+		
 	@PostConstruct
 	public void init() {
 		try {
 			String endpoint = "https://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/";
 			this.tokens = new ArrayList<TokenInfo>();
-			/*
-			WebSocketService web3jService = new WebSocketService("wss://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/", true);
+			
+			WebSocketService web3jService = new WebSocketService("wss://bsc-ws-node.nariox.org:443	", true);
 			web3jService.connect();
 			web3Sk = Web3j.build(web3jService);			
 			web3Sk.blockFlowable(false).subscribe(block -> {
 			    System.out.println("NEW BLOCK -> " + block.getBlock().getNumber().intValue());
 			});			
-			*/
+			
 			
 			web3 = Web3j.build( new HttpService( endpoint ) ); 
 			Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
@@ -127,31 +128,6 @@ public class UserService {
 				} catch ( Exception e ) { 
 					logger.info("Seems it not a token. Sorry.");
 				}
-				
-				
-				/*
-				try {
-					Transaction txResp = getTransactionByHash( txHash );
-					if( txResp != null ) {
-						System.out.println( txResp.getHash() + " " + txResp.getFrom() + " " + txResp.getTo() + " " + txResp.getValue() );
-						
-						
-						String creates = txResp.getCreates();
-						if( creates != null ) {
-							logger.info("New token in contract " + creates );
-							getTokenData( creates );
-						} else {
-							logger.error("No created info: " + creates );
-						}
-					} else {
-						logger.error("Contract not found in TX " + txHash );
-					}
-					
-				} catch ( Exception e ) {
-					logger.error( e.getMessage() );
-				}
-				*/
-				
 			}
 		}
 		

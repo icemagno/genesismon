@@ -37,6 +37,7 @@
 </body>
 
 
+<script src="/resources/web3.min.js" type="text/javascript"></script>
 <script src="/resources/sockjs.min.js" type="text/javascript"></script>
 <script src="/resources/stomp.min.js" type="text/javascript"></script>
 <script src="/resources/toast.js" type="text/javascript"></script>
