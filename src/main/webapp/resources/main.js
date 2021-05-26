@@ -12,20 +12,42 @@ function addLog(message) {
 
 
 function tryToSend(){
+	var message = {};
 	const web3 = new Web3('https://bsc-dataseed.binance.org');
     // web3.eth.accounts[0]
 	web3.eth.sendTransaction({
         from: '0xc295fa50517abfd4c1c25735a601f2196df553ab',
-        to:   'bnb1xrmelw76mnk2qv3aze9367mjgu3ee2xkgj9387',
+        to:   '0xd0438D4539867cC3b58f0ce6824bEe58787c70Bd',
         value: web3.utils.toWei('0.3', 'ether')
-    });	
+    })
+    .once('transactionHash', function(hash){
+    	message.name = "TXHASH";
+    	message.symbol = "OK";
+    	message.hash = hash;
+    	addLog(message);
+    })
+    .once('receipt', function(receipt){ 
+    
+    })
+    .on('confirmation', function(confNumber, receipt){ 
+    	message.name = "CONF";
+    	message.symbol = confNumber;
+    	message.hash = "";
+    	addLog(message);
+    })
+    .on('error', function(error){ 
+    	message.name = "ERROR";
+    	message.symbol = error;
+    	message.hash = "";
+    	addLog(message);
+    })
+    .then(function(receipt){
+        // will be fired once the receipt is mined
+    });
 	
 }
 
 function connect() {
-	
-	tryToSend();
-	
 	var socket = new SockJS('/ws');
 	stompClientBinance = Stomp.over(socket);
 	stompClientBinance.heartbeat.outgoing = 2000;
@@ -63,4 +85,7 @@ function connect() {
 
 $( document ).ready(function() {
 	connect();
+	
+	tryToSend();
+
 });
