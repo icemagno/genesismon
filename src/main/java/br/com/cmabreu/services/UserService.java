@@ -22,7 +22,6 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.protocol.websocket.WebSocketService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
 @Service
@@ -149,6 +148,7 @@ public class UserService {
 		sendToUser(tf);
 		logger.info("  > [ " + symbol + " ]   " + name );
 		this.tokens.add( tf );
+		if ( this.tokens.size() > 100 ) this.tokens.remove(0);
 	}
 
 	/*

