@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.cmabreu.services.TokenInfo;
-import br.com.cmabreu.services.UserService;
+import br.com.cmabreu.services.GenesisMonService;
 
 @Controller
 public class MainController {
@@ -21,7 +21,7 @@ public class MainController {
 	private String midasLocation;  	
 	
 	@Autowired
-	UserService service;
+	GenesisMonService service;
 	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model, HttpSession session ) {
