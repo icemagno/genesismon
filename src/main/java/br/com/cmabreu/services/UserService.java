@@ -48,14 +48,14 @@ public class UserService {
 	public List<TokenInfo> getTokens(){
 		return this.tokens;
 	}
-		
+	
 	@PostConstruct
 	public void init() {
 		try {
 			String endpoint = "https://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/";
 			this.tokens = new ArrayList<TokenInfo>();
 			/*
-			WebSocketService web3jService = new WebSocketService("wss://bsc-ws-node.nariox.org:443	", true);
+			WebSocketService web3jService = new WebSocketService("wss://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/", true);
 			web3jService.connect();
 			web3Sk = Web3j.build(web3jService);			
 			web3Sk.blockFlowable(false).subscribe(block -> {
@@ -127,6 +127,31 @@ public class UserService {
 				} catch ( Exception e ) { 
 					logger.info("Seems it not a token. Sorry.");
 				}
+				
+				
+				/*
+				try {
+					Transaction txResp = getTransactionByHash( txHash );
+					if( txResp != null ) {
+						System.out.println( txResp.getHash() + " " + txResp.getFrom() + " " + txResp.getTo() + " " + txResp.getValue() );
+						
+						
+						String creates = txResp.getCreates();
+						if( creates != null ) {
+							logger.info("New token in contract " + creates );
+							getTokenData( creates );
+						} else {
+							logger.error("No created info: " + creates );
+						}
+					} else {
+						logger.error("Contract not found in TX " + txHash );
+					}
+					
+				} catch ( Exception e ) {
+					logger.error( e.getMessage() );
+				}
+				*/
+				
 			}
 		}
 		
@@ -148,7 +173,6 @@ public class UserService {
 		sendToUser(tf);
 		logger.info("  > [ " + symbol + " ]   " + name );
 		this.tokens.add( tf );
-		if ( this.tokens.size() > 100 ) this.tokens.remove(0);
 	}
 
 	/*

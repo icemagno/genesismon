@@ -3,52 +3,42 @@ var countLog = 0;
 
 function addLog(message) {
 	countLog++;
-	if ( countLog == 100 ) {
+	if ( countLog == 10 ) {
 		countLog--;
 		$('#tableToken tr:first').remove();
 	}
 	$("<tr><td>" + message.name + "</td><td>[ " + message.symbol + " ]</td><td><a target='_BLANK' href='https://bscscan.com/address/"+message.hash+"'><i class='fa fa-info-circle'></a></td><td><a target='_BLANK' href='https://poocoin.app/tokens/"+message.hash+"'><i class='fa fa-bar-chart'></a></td></tr>").appendTo('#tableToken tbody').hide().fadeIn(2000);
 }
 
+
 /*
-function tryToSend( acc ){
-	var message = {};
-	const web3 = new Web3('https://bsc-dataseed.binance.org');
-    // web3.eth.accounts[0]
-	web3.eth.sendTransaction({
-        from: acc,
-        to:   '0xd0438D4539867cC3b58f0ce6824bEe58787c70Bd',
-        value: web3.utils.toWei('0.3', 'ether')
-    })
-    .once('transactionHash', function(hash){
-    	message.name = "TXHASH";
-    	message.symbol = "OK";
-    	message.hash = hash;
-    	addLog(message);
-    })
-    .once('receipt', function(receipt){ 
-    
-    })
-    .on('confirmation', function(confNumber, receipt){ 
-    	message.name = "CONF";
-    	message.symbol = confNumber;
-    	message.hash = "";
-    	addLog(message);
-    })
-    .on('error', function(error){ 
-    	message.name = "ERROR";
-    	message.symbol = error;
-    	message.hash = "";
-    	addLog(message);
-    })
-    .then(function(receipt){
-        // will be fired once the receipt is mined
-    });
-	
+ * 
+ * 
+ * function isAccountLocked(account) {
+    try {
+        web3.eth.sendTransaction({
+            from: "0xc295fa50517abfd4c1c25735a601f2196df553ab",
+            to: account,
+            value: 0
+        });
+        return false;
+    } catch (err) {
+        return (err.message == "authentication needed: password or unlock");
+    }
 }
-*/
+
+
+
+
+ * 
+ * 
+ * 
+ */
+
+
 
 function connect() {
+	
 	var socket = new SockJS('/ws');
 	stompClientBinance = Stomp.over(socket);
 	stompClientBinance.heartbeat.outgoing = 2000;
@@ -86,21 +76,4 @@ function connect() {
 
 $( document ).ready(function() {
 	connect();
-
-/*	
-	if(window.ethereum) {
-	    ethereum.enable();
-	    
-	    web3.eth.getAccounts((error,result) => {
-	        if (error) {
-	            console.log(error);
-	        } else {
-	        	tryToSend( result[0] );
-	        }
-	    });	    
-	}	
-*/	
-	
-	
-
 });
