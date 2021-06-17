@@ -10,6 +10,10 @@
   
 	<!-- Bootstrap 4.0-->
 	<link rel="stylesheet" href="resources/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+
+	<!-- flipclock-->
+	<link rel="stylesheet" href="resources/assets/vendor_components/FlipClock-master/compiled/flipclock.css">
+	
 	
 	<!-- Bootstrap extend-->
 	<link rel="stylesheet" href="resources/css/bootstrap-extend.css">

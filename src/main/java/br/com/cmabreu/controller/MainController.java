@@ -31,6 +31,11 @@ public class MainController {
 		return "tokendetails";
 	}	
 
+	@RequestMapping(value = "/monitor", method = RequestMethod.GET)
+	public String monitor(Model model, HttpSession session ) {
+		return "monitor";
+	}	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String root( Model model ) {
 		return "index";

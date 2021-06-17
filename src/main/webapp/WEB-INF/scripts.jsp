@@ -14,6 +14,9 @@
 <!-- FastClick -->
 <script src="resources/assets/vendor_components/fastclick/lib/fastclick.js"></script>
 
+<!-- FlipClock -->
+<script src="resources/assets/vendor_components/FlipClock-master/compiled/flipclock.min.js"></script>
+
 <script src="resources/js/sockjs.min.js"></script>
 <script src="resources/js/stomp.min.js"></script>
 <script src="resources/js/script.js"></script>
