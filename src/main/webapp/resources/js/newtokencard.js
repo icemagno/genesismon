@@ -1,13 +1,13 @@
 function getNewTokenCard( message ){
 
 return '<div class="media" id="'+message.hash+'">' +
-	  '<a class="avatar avatar-lg status-success" href="#">' +
+	  '<a target="_BLANK" class="avatar avatar-lg status-success" href="/tokendetails?address='+message.hash+'">' +
 		'<i class="cc NVC"></i>' +
 	  '</a>' +
 
 	  '<div class="media-body">' +
 		'<p>' +
-		  '<a href="#"><strong>'+message.name+'</strong></a>' +
+		  '<a target="_BLANK" href="/tokendetails?address='+message.hash+'"><strong>'+message.name+'</strong></a>' +
 		  '<small class="sidetitle">BEP20</small>' +
 		'</p>' +
 		'<p>'+message.symbol+'</p>' +
@@ -22,8 +22,9 @@ return '<div class="media" id="'+message.hash+'">' +
 	  '</div>' +
 
 	  '<div class="media-right gap-items">' +
-		'<a class="media-action lead" target="_BLANK" href="https://bscscan.com/address/'+message.hash+'" data-toggle="tooltip" title="Ver no BSCScan"><i class="ti-info-alt"></i></a>' +
-		'<a class="media-action lead" target="_BLANK" href="https://poocoin.app/tokens/'+message.hash+'" data-toggle="tooltip" title="Gráfico"><i class="ti-bar-chart"></i></a>' +
+	    '<a class="media-action lead" onClick="saveToken(\''+message.hash+'\');" href="#" title="Salvar"><i class="ti-save"></i></a>' +
+		'<a class="media-action lead" target="_BLANK" href="https://bscscan.com/address/'+message.hash+'" title="Ver no BSCScan"><i class="ti-info-alt"></i></a>' +
+		'<a class="media-action lead" target="_BLANK" href="https://poocoin.app/tokens/'+message.hash+'" title="Gráfico"><i class="ti-bar-chart"></i></a>' +
 	  '</div>' +
 	'</div>';
 	

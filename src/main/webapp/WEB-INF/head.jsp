@@ -6,7 +6,7 @@
     <meta name="author" content="">
     <link rel="icon" href="resources/images/favicon.ico">
 
-    <title>Crypto Admin - Dashboard  User list</title>
+    <title>Monitor de Tokens</title>
   
 	<!-- Bootstrap 4.0-->
 	<link rel="stylesheet" href="resources/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">

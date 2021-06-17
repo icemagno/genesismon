@@ -26,6 +26,11 @@ public class MainController {
 		return "index";
 	}	
 
+	@RequestMapping(value = "/tokendetails", method = RequestMethod.GET)
+	public String tokendetails(Model model, HttpSession session ) {
+		return "tokendetails";
+	}	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String root( Model model ) {
 		return "index";
