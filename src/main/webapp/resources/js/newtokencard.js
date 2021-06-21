@@ -23,7 +23,7 @@ return '<div class="media" id="'+message.hash+'">' +
 
 	  '<div class="media-right gap-items">' +
 	    '<a class="media-action lead" onClick="saveToken(\''+message.hash+'\');" href="#" title="Salvar"><i class="ti-save"></i></a>' +
-	    '<a class="media-action lead" target="_BLANK" href="tokendetails?address='+message.hash+'" title="Inspecionar"><i class="ti-search"></i></a>' +
+	    //'<a class="media-action lead" target="_BLANK" href="tokendetails?address='+message.hash+'" title="Inspecionar"><i class="ti-search"></i></a>' +
 		'<a class="media-action lead" target="_BLANK" href="https://bscscan.com/address/'+message.hash+'" title="Ver no BSCScan"><i class="ti-info-alt"></i></a>' +
 		'<a class="media-action lead" target="_BLANK" href="https://poocoin.app/tokens/'+message.hash+'" title="Gráfico"><i class="ti-bar-chart"></i></a>' +
 	  '</div>' +

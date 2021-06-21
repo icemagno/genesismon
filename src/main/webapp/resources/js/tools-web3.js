@@ -28,9 +28,8 @@ $( document ).ready(function() {
 function monitorToken( token ){
 
 	var contract = new web3.eth.Contract( bep20Abi, token );
-	
-	
 	contract.methods.name().call().then(function(result){
+		
 		
 		$("#tknName").text( result );
 		$("#tknContrct").text( token );
@@ -85,10 +84,9 @@ async function start() {
 	if( window.ethereum ){
 		web3 = new Web3(window.ethereum);
 		//window.ethereum.enable();
-		var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+		//var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 		
 		
-		$("#spinGear").title = accounts[0];
 		
 		
 		

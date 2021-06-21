@@ -6,8 +6,6 @@
 <!-- Site wrapper -->
 <div class="wrapper">
 
-
-
   <div class="content-wrapper" style="min-height:92%">
     
     <section class="content">
@@ -29,18 +27,18 @@
 				</div>
 				  <ul class="flexbox flex-justified text-center my-10">
 					  <li class="br-1">
-						<div class="font-size-20 text-primary">Suprimento Total:  <span class="text-bold">1.000.000.000</span></div>						
+						<div class="font-size-14 text-primary">Suprimento Total:  <span class="text-bold">1.000.000.000</span></div>						
 					  </li>
 
 					  <li class="br-1">
-						<div class="font-size-20 text-info">Tokens Queimados:  <span class="text-bold">500.000.000</span></div>
+						<div class="font-size-14 text-info">Tokens Queimados:  <span class="text-bold">500.000.000</span></div>
 					  </li>
 
 					  <li class="br-1">
-						<div class="font-size-20 text-yellow">Pool de Liquidez:  <span class="text-bold">TRANCADO</span></div>						
+						<div class="font-size-14 text-yellow">Pool de Liquidez:  <span class="text-bold">TRANCADO</span></div>						
 					  </li>
 					  <li>
-						<div class="font-size-20 text-warning">Valor de ICO:  <span class="text-bold">BNB 0,01 por milhão</span></div>						
+						<div class="font-size-14 text-warning">Valor de ICO:  <span class="text-bold">BNB 0,01 por milhão</span></div>						
 					  </li>
 				  </ul>
 			</div>
