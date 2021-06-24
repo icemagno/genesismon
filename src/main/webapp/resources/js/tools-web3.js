@@ -26,7 +26,7 @@ $( document ).ready(function() {
 });
 
 function monitorToken( token ){
-
+	
 	var contract = new web3.eth.Contract( bep20Abi, token );
 	contract.methods.name().call().then(function(result){
 		
@@ -43,12 +43,20 @@ function monitorToken( token ){
 
 		contract.methods.symbol().call().then(function(result){
 			symbol = result;
-			$("#tknSymbol").text( result );
+			$(".tknSymbol").text( result );
 			
 			contract.methods.decimals().call().then(function(result){
 				decimals = result;
 				$("#graphFrame").append('<iframe style="width: 100%; height: 100%; border: 0px;"  src="https://goswappcharts.web.app/?showInUSD=false&symbol='+symbol+'&isbsc=true&tokenId='+token+'"></iframe>');
 				$("#tknDeci").text( result );
+				
+				
+				calcBNBPrice( token );
+				setInterval( function(){
+					calcBNBPrice( token );
+				}, 1000 * 60);
+				
+				
 			});
 			
 			
@@ -56,15 +64,7 @@ function monitorToken( token ){
 		contract.methods.totalSupply().call().then(function(result){
 			$("#tknSupply").text( result );
 		});
-
-
-
-		calcBNBPrice( token );
-		setInterval( function(){
-			calcBNBPrice( token );
-		}, 1000 * 60);
-		
-	});	
+	});
 	
 };
 
@@ -83,12 +83,8 @@ function showEvent( event ){
 async function start() {
 	if( window.ethereum ){
 		web3 = new Web3(window.ethereum);
-		//window.ethereum.enable();
+		window.ethereum.enable();
 		//var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-		
-		
-		
-		
 		
 		let token = searchParams.get('address');
 		if( (token.length == 42) && token.startsWith("0x") ){
@@ -153,16 +149,24 @@ async function calcBNBPrice( token ){
     try {
         let router = await new web3.eth.Contract( pancakeSwapAbi, pancakeSwapContract );
         amountOut = await router.methods.getAmountsOut(bnbToSell, [wrappedBnb,token]).call();
-        amountOut =  web3.utils.fromWei(amountOut[1]);
+        let value = setDecimals( amountOut[1], decimals);
+        amountOut = value.padEnd(decimals,"0").substring(0,10);
+        
+        let reverse = ( 1 / parseFloat(amountOut) ) * 10**9;
+
+
+    	$("#tknPrice").text( amountOut + " " + symbol.toUpperCase() );
+    	$("#tknPriceRev").text( reverse );
+        
+        
     } catch (error) {
 		
 		console.log(error);
 		
 	}
 
-	let value = setDecimals( amountOut, decimals);
+	
 	//console.log( value );
-	$("#tknPrice").text( value + " " + symbol.toUpperCase() + " (Pancake)" );
 }
 
 /*
@@ -187,13 +191,10 @@ async function calcSell( tokensToSell, tokenAddres){
 */
 
 function setDecimals( number, decimals ){
-    number = number.toString();
-    let numberAbs = number.split('.')[0]
-    let numberDecimals = number.split('.')[1] ? number.split('.')[1] : '';
-    while( numberDecimals.length < decimals ){
-        numberDecimals += "0";
-    }
-    return numberAbs + numberDecimals;
+	let decs = number.substr( number.length - decimals); 
+	let abs = number.substr(0, number.length - decimals );
+	
+    return abs + "." +  decs;
 }
 /*
 function getPancakePairPrice( pancakeLp ){

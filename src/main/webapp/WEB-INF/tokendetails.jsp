@@ -25,7 +25,7 @@
                                  </tr>
                                  <tr>
                                     <td>Símbolo</td>
-                                    <td><span id="tknSymbol"></span></td>
+                                    <td><span class="tknSymbol"></span></td>
                                  </tr>
                                  <tr>
                                     <td>Decimais</td>
@@ -36,8 +36,8 @@
                                     <td><span id="tknSupply"></span></td>
                                  </tr>
                                  <tr>
-                                    <td>1 BNB = </td>
-                                    <td><span id="tknPrice"></span></td>
+                                    <td>1 BNB =<br>1 <span class="tknSymbol"></span> = </td>
+                                    <td><span id="tknPrice"></span></br><span id="tknPriceRev"></span> x 10<sup>9</sup> BNB</td>
                                  </tr>
                               </table>
                            </div>
