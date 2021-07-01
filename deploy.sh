@@ -8,6 +8,7 @@ docker build --tag=magnoabreu/genesismon:1.0 --rm=true .
 
 docker run --name genesismon --hostname=genesismon --network rede_interna \
 -v /etc/localtime:/etc/localtime:ro \
+-v /data:/srv/genesismon \
 -p 8087:8080 \
 -d magnoabreu/genesismon:1.0
 

@@ -29,6 +29,12 @@
   	
 	<dependencies>
 	
+		<dependency>
+		    <groupId>net.ricecode</groupId>
+			<artifactId>string-similarity</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
