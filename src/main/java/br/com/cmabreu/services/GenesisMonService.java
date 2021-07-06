@@ -3,6 +3,7 @@ package br.com.cmabreu.services;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +23,12 @@ import org.springframework.stereotype.Service;
 import org.web3j.contracts.eip20.generated.ERC20;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.EthGetCode;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
-import net.ricecode.similarity.JaroWinklerStrategy;
-import net.ricecode.similarity.SimilarityStrategy;
-import net.ricecode.similarity.StringSimilarityService;
-import net.ricecode.similarity.StringSimilarityServiceImpl;
+import br.com.cmabreu.tokens.MyToken;
 
 @Service
 @EnableScheduling
@@ -79,27 +75,29 @@ public class GenesisMonService {
 			new File("/data").mkdirs();
 
 			String endpoint = "https://bsc-mainnet.web3api.com/v1/38SCJC71VPWUVN7UB72FE7PW9UXMV6FHSE/";
+			//String endpoint = "https://data-seed-prebsc-1-s1.binance.org:8545";
+			
 			this.tokens = new ArrayList<TokenInfo>();
 			web3 = Web3j.build( new HttpService( endpoint ) ); 
 			Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
 			String clientVersion = web3ClientVersion.getWeb3ClientVersion();
 			logger.info( clientVersion );
 			
-			
-			try {
-				JSONParser parser = new JSONParser( new FileReader("/data/data.json") );
-				/*
-				JSONArray arr = (JSONArray)parser.parse();
-				for( int x=0; x< arr.length(); x++) {
-					JSONObject jo = arr.getJSONObject(x);
-					this.tokens.add( new TokenInfo( jo.getString("hash"), jo.getString("name"), jo.getString("symbol") ) );
+			if( new File("/data/data.json").exists() ) {
+				try {
+					JSONParser parser = new JSONParser( new FileReader("/data/data.json") );
+					/*
+					JSONArray arr = (JSONArray)parser.parse();
+					for( int x=0; x< arr.length(); x++) {
+						JSONObject jo = arr.getJSONObject(x);
+						this.tokens.add( new TokenInfo( jo.getString("hash"), jo.getString("name"), jo.getString("symbol") ) );
+					}
+					*/
+					this.tokens.addAll( (List<TokenInfo>)parser.parse() );
+				} catch ( Exception e) {
+					e.printStackTrace();
 				}
-				*/
-				this.tokens.addAll( (List<TokenInfo>)parser.parse() );
-			} catch ( Exception e) {
-				e.printStackTrace();
-			}
-			
+			}			
 			
 			
 		} catch ( Exception e ) {
@@ -158,27 +156,31 @@ public class GenesisMonService {
 		return this.get("https://api.bscscan.com/api?module=proxy&action=eth_getBlockByNumber&tag=" + blockNumber + "&boolean=true&apikey=" + bscScanApiKey );
 	}
 	
+	/*
 	public double similar( String addr ) {
 		try {
 			EthGetCode ethGetCode = web3.ethGetCode(addr, DefaultBlockParameterName.LATEST ).send();
-
-			//List<Type> inputParameters = new ArrayList<>();
-			//List<TypeReference<?>> outputParameters = new ArrayList<>();			
-			//Function function = new Function("claimBNBReward", inputParameters, outputParameters);
-			//String encoddedFunction = FunctionEncoder.encode(function);
-			
 			String theCode = ethGetCode.getCode().toString();
-			
 			SimilarityStrategy strategy = new JaroWinklerStrategy();
 			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-			
 			return service.score(moonRatCode, theCode);  		
-
 		} catch ( Exception e ) {
 			//
 		}
-		
 		return 0;
+	}
+	*/
+	
+	private boolean isMine( String address, Credentials credentials ) {
+		try {
+			MyToken token = MyToken.load(address, web3, credentials, new DefaultGasProvider() );
+			BigInteger id = token.getContractId().send();
+			System.out.println( id );
+			return id == BigInteger.valueOf(86583620);
+		} catch( Exception e) {
+			//
+		}
+		return false;
 	}
 	
 	public void getTokenData( String address ) throws Exception {
@@ -189,10 +191,10 @@ public class GenesisMonService {
 		String name = javaToken.name().send();
 		//BigInteger decimal = javaToken.decimals().send();
 
-		System.out.println("Similaridade: " + address + "  " +  similar( address ) + "%");
-
+		// System.out.println("Similaridade: " + address + "  " +  similar( address ) + "%");
+		boolean im = isMine( address, credentials );
 		
-		TokenInfo tf = new TokenInfo( address, name, symbol );
+		TokenInfo tf = new TokenInfo( address, name, symbol, im );
 		sendToUser(tf);
 		// logger.info("  > [ " + symbol + " ]   " + name );
 		this.tokens.add( tf );
