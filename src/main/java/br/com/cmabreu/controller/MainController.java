@@ -26,6 +26,11 @@ public class MainController {
 		return "index";
 	}	
 
+	@RequestMapping(value = "/crash", method = RequestMethod.GET)
+	public String crash(Model model, HttpSession session ) {
+		return "crash";
+	}	
+
 	@RequestMapping(value = "/tokendetails", method = RequestMethod.GET)
 	public String tokendetails(Model model, HttpSession session ) {
 		return "tokendetails";

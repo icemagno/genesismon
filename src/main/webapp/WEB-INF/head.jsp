@@ -14,7 +14,8 @@
 	<!-- flipclock-->
 	<link rel="stylesheet" href="resources/assets/vendor_components/FlipClock-master/compiled/flipclock.css">
 	
-	
+
+		
 	<!-- Bootstrap extend-->
 	<link rel="stylesheet" href="resources/css/bootstrap-extend.css">
 	

@@ -3,8 +3,6 @@ package br.com.cmabreu.services;
 import java.io.File;
 import java.math.BigDecimal;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
@@ -14,7 +12,6 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
@@ -23,7 +20,7 @@ import org.web3j.utils.Convert.Unit;
 public class ZobieService {
 	private Web3j web3;
 	
-	@PostConstruct
+	// @PostConstruct
 	public void init() {
 		//web3 = Web3j.build(new HttpService("https://data-seed-prebsc-1-s1.binance.org:8545"));
 	
